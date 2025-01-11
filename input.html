@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bói name by Ming 1.0</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .input-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            min-height: 120px;
+            line-height: 1.5;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            white-space: nowrap;
+            height: fit-content;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .error {
+            color: red;
+            display: none;
+            margin-top: 10px;
+            text-align: center;
+            font-size: 16px;
+        }
+        .success {
+            color: #4CAF50;
+            display: none;
+            margin-top: 10px;
+            text-align: center;
+            font-size: 16px;
+        }
+        .error-image {
+            max-width: 300px;
+            margin: 15px auto;
+            display: none;
+        }
+        .message-container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-group">
+        <div>
+            <h2>Bói qua họ tên ver 1.0</h2>
+        </div>
+        <div class="input-container">
+            <textarea id="content" rows="4" placeholder="Nhập họ tên của bạn"></textarea>
+            <button onclick="validateAndSubmit()">Submit</button>
+        </div>
+        <div class="message-container">
+            <p id="error-message" class="error">Không! Không phải họ tên này (gợi ý: viết tắt là LTMT ^^)</p>
+            <p id="success-message" class="success">
+                Đúng họ tên rồi đó, đợi tí coi,  còn lại <span id="countdown">2</span> giây...
+            </p>
+            <img id="error-image" class="error-image" src="daden.jpg" alt="Error image">
+        </div>
+    </div>
+
+    <script>
+        function normalizeString(str) {
+            // Trim spaces and replace multiple spaces with single space
+            return str.trim().replace(/\s+/g, ' ');
+        }
+
+        function validateAndSubmit() {
+            const content = document.getElementById('content').value;
+            const errorMessage = document.getElementById('error-message');
+            const errorImage = document.getElementById('error-image');
+            const successMessage = document.getElementById('success-message');
+            const countdownElement = document.getElementById('countdown');
+            
+            // Normalize and convert to uppercase
+            const normalizedContent = normalizeString(content).toUpperCase();
+            const validStrings = ["LY THI MAI TRANG", "LÝ THỊ MAI TRANG"];
+            
+            if (!validStrings.includes(normalizedContent)) {
+                errorMessage.style.display = 'block';
+                errorImage.style.display = 'block';
+                successMessage.style.display = 'none';
+            } else {
+                errorMessage.style.display = 'none';
+                errorImage.style.display = 'none';
+                successMessage.style.display = 'block';
+                
+                // Disable button to prevent multiple submissions
+                document.querySelector('button').disabled = true;
+                
+                // Countdown timer
+                let seconds = 2;
+                const countdown = setInterval(() => {
+                    seconds--;
+                    countdownElement.textContent = seconds;
+                    if (seconds <= 0) {
+                        clearInterval(countdown);
+                        window.location.href = 'love.html';
+                    }
+                }, 1000);
+            }
+        }
+
+        // Also validate on Enter key press in textarea
+        document.getElementById('content').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                validateAndSubmit();
+            }
+        });
+
+        // Hide messages when user starts typing
+        document.getElementById('content').addEventListener('input', function() {
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('error-image').style.display = 'none';
+            document.getElementById('success-message').style.display = 'none';
+            document.querySelector('button').disabled = false;
+        });
+    </script>
+</body>
+</html>
