@@ -1,0 +1,1 @@
+https://themingw666.github.io/mai-trang/input.html
